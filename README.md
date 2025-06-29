@@ -99,9 +99,9 @@ This will generate: `toilet_0046_m.pgm`, `toilet_0046_s.pgm`, `toilet_0046_t.pgm
 Located in the specified output directory
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="toilet46_m.png" alt="image of toilet main dirs" width="33%" />
-  <img src="toilet46_s.png" alt="image of toilet sec dirs" width="33%" />
-  <img src="toilet46_t.png" alt="image of toilet third dirs" width="33%" />
+  <img src="toilet46_m.png" alt="image of toilet main dirs" width="31%" />
+  <img src="toilet46_s.png" alt="image of toilet sec dirs" width="31%" />
+  <img src="toilet46_t.png" alt="image of toilet third dirs" width="31%" />
 </div>
 
 ## Python Dependencies
