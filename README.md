@@ -1,8 +1,8 @@
-# LIP3D – Geometric Signature for 3D Shape Analysis
+# A 3D Compact Shape Descriptor based on LIP Signature
 
 <img src="pipeline.png" alt="pipeline of the LIP3D signature" width="98%" />
 
-## What is LIP3D used for?
+## What is it used for?
 
 This repository provides code to extract compact geometric features from 3D shapes.  
 The method is being published in a scientific article and extends the 2D **LIP** (Largest Intersection and Projection) descriptor introduced by Thanh Phuong in 2018 (*"Shape measurement using LIP-signature"*) to the 3D domain.
@@ -68,7 +68,43 @@ cmake ..
 make
 ```
 
-### Python Dependencies
+### Example: Generating Profile Images with `imProfile`
+
+The `imProfile` binary is used to extract 2D profile images (binary silhouettes) from a 3D voxelized shape by slicing it along its principal directions.
+
+#### Inputs
+- A 3D mesh file in `.off` format
+- Required parameters:
+  - `--input <path>`: path to the input `.off` mesh
+  - `--output <dir>`: output directory for generated `.pgm` images
+  - `--res <int>`: voxel grid resolution (e.g., 200)
+  - `--maxScan <int>`: number of slicing planes across the object (e.g., 100)
+  - `--imageSize <int>`: size of the output 2D images in pixels (e.g., 200)
+- Optional:
+  - `--viewer`: enable interactive 3D viewer during slicing
+
+#### Usage
+
+```
+./imProfile \
+  --input examples/toilet_0046.off \
+  --output results/toilet_0046/ \
+  --res 200 \
+  --maxScan 100 \
+  --imageSize 200
+```
+#### Output
+
+This will generate: `toilet_0046_m.pgm`, `toilet_0046_s.pgm`, `toilet_0046_t.pgm`: silhouettes from the three principal directions 
+Located in the specified output directory
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="toilet46_m.png" alt="image of toilet main dirs" width="33%" />
+  <img src="toilet46_s.png" alt="image of toilet sec dirs" width="33%" />
+  <img src="toilet46_t.png" alt="image of toilet third dirs" width="33%" />
+</div>
+
+## Python Dependencies
 
 To run the Python feature extraction and classification scripts, you need the following libraries:
 
@@ -92,3 +128,4 @@ You can install them all at once:
 ```
 pip install numpy pandas matplotlib scikit-image scikit-learn opencv-python seaborn joblib
 ```
+
