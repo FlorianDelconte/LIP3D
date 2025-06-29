@@ -1,6 +1,6 @@
 # A 3D Compact Shape Descriptor based on LIP Signature
 
-<img src="toilet46Square.png" alt="pipeline of the LIP3D signature" width="45%" />
+<img src="visu/toilet46Square.png" alt="pipeline of the LIP3D signature" width="45%" />
 
 ## What is it used for?
 
@@ -99,9 +99,9 @@ This will generate: `toilet_0046_m.pgm`, `toilet_0046_s.pgm`, `toilet_0046_t.pgm
 Located in the specified output directory
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="toilet46_m.png" alt="image of toilet main dirs" width="31%" />
-  <img src="toilet46_s.png" alt="image of toilet sec dirs" width="31%" />
-  <img src="toilet46_t.png" alt="image of toilet third dirs" width="31%" />
+  <img src="visu/toilet46_m.png" alt="image of toilet main dirs" width="31%" />
+  <img src="visu/toilet46_s.png" alt="image of toilet sec dirs" width="31%" />
+  <img src="visu/toilet46_t.png" alt="image of toilet third dirs" width="31%" />
 </div>
 
 ## Python Dependencies
