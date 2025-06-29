@@ -7,7 +7,7 @@
 This repository provides code to extract compact geometric features from 3D shapes.  
 The method is being published in a scientific article and extends the 2D **LIP** (Largest Intersection and Projection) descriptor introduced by Thanh Phuong in 2018 (*"Shape measurement using LIP-signature"*) to the 3D domain.
 
-It works by:
+It works by:markdown
 1. Generating **2D binary profile images** of a 3D shape along its principal directions (like silhouette projections),
 2. Summarizing each profile into a **compact feature vector** using LIP descriptors.
 
@@ -99,9 +99,9 @@ This will generate: `toilet_0046_m.pgm`, `toilet_0046_s.pgm`, `toilet_0046_t.pgm
 Located in the specified output directory
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="visu/toilet46_m.png" alt="image of toilet main dirs" width="31%" />
-  <img src="visu/toilet46_s.png" alt="image of toilet sec dirs" width="31%" />
-  <img src="visu/toilet46_t.png" alt="image of toilet third dirs" width="31%" />
+  <img src="visu/toilet_0046_m.png" alt="image of toilet main dirs" width="31%" />
+  <img src="visu/toilet_0046_s.png" alt="image of toilet sec dirs" width="31%" />
+  <img src="visu/toilet_0046_t.png" alt="image of toilet third dirs" width="31%" />
 </div>
 
 ## Python Dependencies
@@ -129,3 +129,77 @@ You can install them all at once:
 pip install numpy pandas matplotlib scikit-image scikit-learn opencv-python seaborn joblib
 ```
 
+
+### Example: Extracting LIP Features from Profile Images `lip_sign.py`
+
+The script `lip_sign.py` computes **LIP descriptors** from three input 2D profile images (typically generated with `imProfile`). It processes each image using the Radon transform and extracts six LIP signatures per image.
+
+#### Inputs
+- Three 2D profile images (in `.pgm` or `.png` format), corresponding to the main directions: M (main), S (secondary), T (tertiary)
+- An output directory where `.csv` and `.png` results will be saved
+
+#### Usage
+
+```
+python lip_sign.py \
+  toilet_0046_m.pgm toilet_0046_s.pgm toilet_0046_t.pgm \
+  ./results/toilet_0046/
+```
+
+#### Output
+
+This will generate:
+
+- Three CSV files:
+  - toilet_0046_m.csv, toilet_0046_s.csv, toilet_0046_t.csv
+  Each contains six LIP signatures (LIP0 to LIP5) across 180 angles.
+
+- Three visualization plots:
+
+  - toilet_0046_m_visu.png, toilet_0046_s_visu.png, toilet_0046_t_visu.png
+  These show all six signature curves per image.
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="visu/toilet_0046_m_visu.png" alt="image of toilet main dirs" width="31%" />
+  <img src="visu/toilet_0046_s_visu.png" alt="image of toilet sec dirs" width="31%" />
+  <img src="visu/toilet_0046_t_visu.png" alt="image of toilet third dirs" width="31%" />
+</div>
+
+
+These CSV files serve as input for the next step: local feature extraction and classification.
+
+### Example: Building a compact Feature Vector from LIP Signatures `make_custom_feature_file.py`
+
+This script aggregates the LIP signatures previously extracted by `lip_sign.py` and creates a final compact feature vector for classification. It also offers optional geometric descriptors such as **circularity** and **orientation merit**.
+
+#### Inputs
+- Three `.csv` files containing LIP signatures for a single object:
+  - `*_m.csv`, `*_s.csv`, `*_t.csv`
+- The corresponding 2D profile images:
+  - `*_m.pgm`, `*_s.pgm`, `*_t.pgm`
+- Optional flags to include:
+  - `--use_circularity` — computes the circularity of each image
+  - `--use_orientation_merit` — computes orientation-based discriminative power
+
+#### Usage
+
+```
+python make_custom_feature_file.py \
+  toilet_0046_m.csv toilet_0046_s.csv toilet_0046_t.csv \
+  toilet_0046_m.pgm toilet_0046_s.pgm toilet_0046_t.pgm \
+  --use_circularity --use_orientation_merit
+```
+#### Output
+The script prints to standard output the final feature vector composed of:
+
+  - 3 × 3 local statistics (max, min, median) on each signature 3 views × 6 signatures = 18 values
+
+  - (Optional) 3 circularity values
+
+  - (Optional) 3 orientation merit values
+
+Redirect the output to a .txt file for batch processing:
+
+```
+python make_custom_feature_file.py ... > toilet_features.txt
+```
