@@ -22,16 +22,9 @@ message(STATUS "DGtal found.")
 # -----------------------------------------------------------------------------
 include_directories( "${PROJECT_SOURCE_DIR}/ext/" )
 
-find_package(PCL 1.2 REQUIRED COMPONENTS common segmentation)
-include_directories(${PCL_INCLUDE_DIRS})
-link_directories(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
-
-SET(PCLLib ${PCL_SEGMENTATION_LIBRARIES})
-
 ADD_EXECUTABLE(imProfile Main)
-TARGET_LINK_LIBRARIES(imProfile ${DGTAL_LIBRARIES} ${DGtalToolsLibDependencies} ${PCLLib})
+TARGET_LINK_LIBRARIES(imProfile ${DGTAL_LIBRARIES} ${DGtalToolsLibDependencies})
 
 ADD_EXECUTABLE(imViewer viewerSimple customViewer3D)
-TARGET_LINK_LIBRARIES(imViewer ${DGTAL_LIBRARIES} ${DGtalToolsLibDependencies} ${PCLLib})
+TARGET_LINK_LIBRARIES(imViewer ${DGTAL_LIBRARIES} ${DGtalToolsLibDependencies})
 

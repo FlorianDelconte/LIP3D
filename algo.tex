@@ -1,0 +1,37 @@
+\documentclass{standalone}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{algorithm}[H]
+    \caption{Profile Image Generation}\label{ALGO:imagePro}
+    \KwIn{Voxelized 3D image \texttt{meshVolImage}, direction \texttt{normalDir}, image size \texttt{imageSize}, maximum scan depth \texttt{maxScan}}
+    \KwOut{2D binary profile image \texttt{profileImage}}
+
+    \texttt{center} $\gets$ starting point computed by shifting the center of the voxel grid domain along $-\texttt{normalDir}$\;
+    \texttt{profileImage} $\gets$ 2D image over \texttt{aDomain2D}, initialized to zero\;
+    \texttt{embedder} $\gets$ 2D-to-3D embedding using \texttt{center}, \texttt{normalDir}, and \texttt{imageSize}\;
+    \texttt{extractedImage} $\gets$ 2D view of \texttt{meshVolImage} using \texttt{embedder}\;
+    \texttt{firstFound} $\gets$ \texttt{false}\;
+    \texttt{k} $\gets$ 0\;
+
+    \While{\texttt{k} $<$ \texttt{maxScan} \textbf{or} \texttt{not} \texttt{firstFound}}{
+        \texttt{embedder}.shiftOriginPoint(\texttt{normalDir})\;
+
+        \ForEach{$p \in$ \texttt{aDomain2D}}{
+            \If{\texttt{profileImage(p)} $==$ 0 \textbf{and} \texttt{extractedImage(p)} $\neq$ 0}{
+                \texttt{profileImage(p)} $\gets$ 255\;
+                \texttt{firstFound} $\gets$ \texttt{true}\;
+            }
+        }
+
+        \If{\texttt{firstFound}}{
+            \texttt{k} $\gets$ \texttt{k} + 1\;
+        }
+    }
+
+    \Return{\texttt{profileImage}}\;
+\end{algorithm}
+
+\end{document}
