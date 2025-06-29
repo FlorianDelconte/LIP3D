@@ -1,6 +1,6 @@
 # A 3D Compact Shape Descriptor based on LIP Signature
 
-<img src="visu/imageprincipale.png" alt="pipeline of the LIP3D signature" width="45%" />
+<img src="visu/imageprincipale.png" alt="pipeline of the LIP3D signature" width="90%" />
 
 ## What is it used for?
 
