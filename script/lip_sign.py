@@ -47,44 +47,67 @@ def lengthSeg(a,b):
 Compute features for an profil of Radon img
 '''
 def getFeaturesByProfil(profil):
+    """
+    Calcule six descripteurs (LIP0 à LIP5) à partir d’un profil 1D (extrait d’une transformée de Radon).
+    
+    Les points clefs identifiés sont :
+      - M : maximum du profil (valeur et indice)
+      - B : premier point strictement positif (infRho)
+      - E : dernier point strictement positif (supRho)
+      - H : projeté de M sur l’axe des abscisses (i.e. (argMaxVal, 0))
+    
+    La normalisation se fait par le nombre de valeurs strictement positives entre B et E.
 
-    maxVal=sys.float_info.min
-    argMaxVal=-1
-    infRho=len(profil)-1
-    supRho=0
-    somme=0.
-    for i in range(len(profil)):
-        val=profil[i]
-        if(val>maxVal):
-            maxVal=val
-            argMaxVal=i
-        if(val>0):
-            if (i < infRho):
-                infRho=i
-            if (i > supRho):
-                supRho=i
-            somme+=1
-    M=(argMaxVal,maxVal)
-    H=(argMaxVal,0)
-    B=(infRho,0)
-    E=(supRho,0)
+    Paramètre :
+        profil (ndarray) : vecteur 1D contenant le profil.
 
-    m1=np.mean(profil[infRho-1:argMaxVal])
+    Retour :
+        tuple : (LIP0, LIP1, LIP2, LIP3, LIP4, LIP5)
+    """
 
-    m2=np.mean(profil[argMaxVal:supRho+1])
-    
-    y1=np.std(profil[infRho-1:argMaxVal])
-    y2=np.std(profil[argMaxVal:supRho+1])
-    
-    
-    LIP=lengthSeg(M,H)/(lengthSeg(B,E))
-    LIP1=lengthSeg(B,H)/(lengthSeg(B,E))
-    LIP2=m1/(lengthSeg(B,E))
-    LIP3=y1/(lengthSeg(B,E))
-    LIP4=m2/(lengthSeg(B,E))
-    LIP5=y2/(lengthSeg(B,E))
-    
-    return LIP,LIP1,LIP2,LIP3,LIP4,LIP5
+    # Initialisation des bornes
+    maxVal = sys.float_info.min
+    argMaxVal = -1
+    infRho = len(profil) - 1  # plus petit indice > 0
+    supRho = 0                 # plus grand indice > 0
+
+    # Parcours du profil pour trouver le max et les bornes non nulles
+    for i, val in enumerate(profil):
+        if val > maxVal:
+            maxVal = val
+            argMaxVal = i
+        if val > 0:
+            infRho = min(infRho, i)
+            supRho = max(supRho, i)
+
+    # Définition des points clés
+    M = (argMaxVal, maxVal)
+    H = (argMaxVal, 0)         # Projection verticale de M
+    B = (infRho, 0)            # Bord gauche du profil significatif
+    E = (supRho, 0)            # Bord droit
+
+    # Moyennes et écarts-types avant et après le maximum
+    m1 = np.mean(profil[infRho:argMaxVal]) if argMaxVal > infRho else 0
+    m2 = np.mean(profil[argMaxVal:supRho+1]) if supRho >= argMaxVal else 0
+
+    y1 = np.std(profil[infRho:argMaxVal]) if argMaxVal > infRho else 0
+    y2 = np.std(profil[argMaxVal:supRho+1]) if supRho >= argMaxVal else 0
+
+    # Longueur du profil = nombre de valeurs strictement positives entre B et E
+    profile_length = np.count_nonzero(profil[infRho:supRho+1] > 0)
+    if profile_length == 0:
+        profile_length = 1  # éviter division par zéro
+
+    # Construction des six signatures LIP normalisées
+    LIP0 = maxVal / profile_length
+    LIP1 = (argMaxVal-infRho) / profile_length
+    LIP2 = m1 / profile_length
+    LIP3 = y1 / profile_length
+    LIP4 = m2 / profile_length
+    LIP5 = y2 / profile_length
+
+    return LIP0, LIP1, LIP2, LIP3, LIP4, LIP5
+
 
 def plot_column_vector(column_vector, output_path="column_plot.png",title="Radon Transform Column", xlabel="Index", ylabel="Value"):
 
